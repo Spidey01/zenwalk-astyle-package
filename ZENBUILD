@@ -1,0 +1,44 @@
+#Maintainer: Terry M. Poulin <BigBoss1964@gmail.com>
+#
+# Please report any issues with this package via Github:
+#
+# 	http://github.com/Spidey01/zenwalk-astyle-package/issues
+#
+# If you must send an E-Mail, prefix the subject line with the package name, or
+# some other means of identifying it as NON-SPAM.
+
+pkgname=astyle
+pkgver=1.24
+pkgrel=1
+zenver=66
+arch=i486
+source=("http://sourceforge.net/projects/${pkgname}/files/${pkgname}/${pkgname}%20${pkgver}/${pkgname}_${pkgver}_linux.tar.gz")
+sourcetemplate="http://dl.dropbox.com/u/7012687/zenwalk/packages/${pkgname}"
+url="http://astyle.sourceforge.net/"
+
+slackdesc=\
+(
+#|-----handy-ruler------------------------------------------------------|
+"$pkgname - source beautifier for C, C++, C#, and Java Source Code"
+""
+"Artistic Style is a filter program written in C++ that automatically"
+"re-indents and re-formats C / C++ / C# / Java source files. It can be"
+"used from a command line, or it can be incorporated as classes in"
+"another C++ program."
+)
+
+build() {
+	cd "$startdir/src/${pkgname}/build/gcc"
+
+	make release shared static java || return 1
+	make prefix="${startdir}/pkg/usr" install
+
+	echo "copying doc files to usr/doc/"
+
+	# stupid script hasn't made this for us yet and docs=() doesn't
+	# understand using "a/b" instead of "b"
+	#
+	mkdir -p "$startdir/pkg/usr/doc/${pkgname}-${pkgver}/"
+	cp -v "$startdir/src/${pkgname}"/doc/* \
+		"$startdir/pkg/usr/doc/${pkgname}-${pkgver}/"
+} 
